@@ -142,7 +142,8 @@ namespace Bonobo.Git.Server.Controllers
 
         private DirectoryInfo GetDirectoryInfo(String project)
         {
-            return new DirectoryInfo(Path.Combine(UserConfiguration.Current.Repositories, project));
+            var folderName = (new Data.EFRepositoryRepository()).GetRepository(project).DisplayName;
+            return new DirectoryInfo(Path.Combine(UserConfiguration.Current.Repositories, folderName));
         }
 
         private Stream GetInputStream()
@@ -168,8 +169,8 @@ namespace Bonobo.Git.Server.Controllers
                 args += " --advertise-refs";
             args += " \"" + workingDir + "\"";
 
-            var gitPath = Path.IsPathRooted(ConfigurationManager.AppSettings["GitPath"]) 
-                ? ConfigurationManager.AppSettings["GitPath"] 
+            var gitPath = Path.IsPathRooted(ConfigurationManager.AppSettings["GitPath"])
+                ? ConfigurationManager.AppSettings["GitPath"]
                 : System.Web.HttpContext.Current.Server.MapPath(ConfigurationManager.AppSettings["GitPath"]);
             var info = new System.Diagnostics.ProcessStartInfo(gitPath, args)
             {

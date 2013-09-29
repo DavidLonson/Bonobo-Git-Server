@@ -22,7 +22,7 @@ else
         @Html.ValidationSummary(false, Resources.Repository_Edit_Fail, new { @id = "errorMsg" })
         @Html.HiddenFor(m => m.Name);
         <fieldset>
-            <h3>@Model.Name</h3>
+            <h3>@Model.DisplayName</h3>
             <div class="ctrlHolder">
                 @Html.LabelFor(m => m.Description)
                 @Html.TextAreaFor(m => m.Description, new { @class = "textInput medium" })
@@ -38,11 +38,12 @@ else
             <div class="ctrlHolder">
                 @Html.LabelFor(m => m.Users)
                 @{
-                    var users = (from u in ViewData["AvailableUsers"] as string[] orderby u
-                                          select new SelectListItem() { Value = u, Text = u}).ToArray();
-                 }
-                
-                  @Html.CheckboxListFor(m => m.Users, users, new { @class = "checkboxList medium" }) 
+                                    var users = (from u in ViewData["AvailableUsers"] as string[]
+                                                 orderby u
+                                                 select new SelectListItem() { Value = u, Text = u }).ToArray();
+                }
+
+                @Html.CheckboxListFor(m => m.Users, users, new { @class = "checkboxList medium" })
                 <p class="formHint">
                     @Resources.Repository_UsersHint
                 </p>
@@ -50,26 +51,28 @@ else
             <div class="ctrlHolder">
                 @Html.LabelFor(m => m.Administrators)
                 @{
-                    var Administrators = (from u in ViewData["AvailableAdministrators"] as string[] orderby u
-                                          select new SelectListItem() { Value = u, Text = u }).ToArray();
-                 }
-                
-                  @Html.CheckboxListFor(m => m.Administrators, Administrators, new { @class = "checkboxList medium" }) 
+                                    var Administrators = (from u in ViewData["AvailableAdministrators"] as string[]
+                                                          orderby u
+                                                          select new SelectListItem() { Value = u, Text = u }).ToArray();
+                }
+
+                @Html.CheckboxListFor(m => m.Administrators, Administrators, new { @class = "checkboxList medium" })
                 <p class="formHint">
                     @Html.ValidationMessageFor(m => m.Administrators)
                     @Resources.Repository_AdministratorsHint
                 </p>
             </div>
             <div class="ctrlHolder">
-                @Html.LabelFor(m => m.Teams)          
-                 @{
-                    var teams = (from u in ViewData["AvailableTeams"] as string[] orderby u
-                                    select new SelectListItem() { Value = u, Text = u}).ToArray();
-                 }
-                
-                  @Html.CheckboxListFor(m => m.Teams, teams, new { @class = "checkboxList medium" }) 
+                @Html.LabelFor(m => m.Teams)
+                @{
+                                    var teams = (from u in ViewData["AvailableTeams"] as string[]
+                                                 orderby u
+                                                 select new SelectListItem() { Value = u, Text = u }).ToArray();
+                }
+
+                @Html.CheckboxListFor(m => m.Teams, teams, new { @class = "checkboxList medium" })
                 <p class="formHint">
-                    @Resources.Repository_TeamsHint     
+                    @Resources.Repository_TeamsHint
                 </p>
             </div>
             <div class="buttonHolder">

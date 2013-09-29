@@ -5,7 +5,7 @@
 @using (Html.BeginForm("Delete", "Repository", FormMethod.Post, new { @class = "uniForm" }))
 {
     <fieldset class="deleteForm">
-        <h3>@String.Format(Resources.Delete_ConfirmationText, Model.Name)</h3>
+        <h3>@String.Format(Resources.Delete_ConfirmationText, Model.DisplayName)</h3>
         @Html.HiddenFor(m => m.Name)
         <div class="buttonHolder"> 
             @Html.ActionLink("← " + Resources.Delete_Back, "Index", null, new { @class = "secondaryAction" })

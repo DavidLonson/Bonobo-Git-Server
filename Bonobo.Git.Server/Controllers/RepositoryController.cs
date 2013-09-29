@@ -14,7 +14,6 @@ using System.Text.RegularExpressions;
 using Bonobo.Git.Server.Configuration;
 using LibGit2Sharp;
 using Bonobo.Git.Server.Extensions;
-
 namespace Bonobo.Git.Server.Controllers
 {
     public class RepositoryController : Controller
@@ -137,7 +136,8 @@ namespace Bonobo.Git.Server.Controllers
         {
             if (!String.IsNullOrEmpty(id))
             {
-                return View(new RepositoryDetailModel { Name = id });
+
+                return View(new RepositoryDetailModel { Name = id, DisplayName = RepositoryRepository.GetRepository(id).DisplayName });
             }
 
             return RedirectToAction("Index");
@@ -149,7 +149,7 @@ namespace Bonobo.Git.Server.Controllers
         {
             if (model != null && !String.IsNullOrEmpty(model.Name))
             {
-                string path = Path.Combine(UserConfiguration.Current.Repositories, model.Name);
+                string path = Path.Combine(UserConfiguration.Current.Repositories, RepositoryRepository.GetRepository(model.Name).DisplayName);
                 if (Directory.Exists(path))
                 {
                     DeleteFileSystemInfo(new DirectoryInfo(path));
@@ -182,7 +182,7 @@ namespace Bonobo.Git.Server.Controllers
             ViewBag.ID = id;
             if (!String.IsNullOrEmpty(id))
             {
-                using (var browser = new RepositoryBrowser(Path.Combine(UserConfiguration.Current.Repositories, id)))                 
+                using (var browser = new RepositoryBrowser(Path.Combine(UserConfiguration.Current.Repositories, RepositoryRepository.GetRepository(id).DisplayName)))
                 {
                     string referenceName;
                     var files = browser.BrowseTree(name, path, out referenceName);
@@ -205,7 +205,7 @@ namespace Bonobo.Git.Server.Controllers
             ViewBag.ID = id;
             if (!String.IsNullOrEmpty(id))
             {
-                using (var browser = new RepositoryBrowser(Path.Combine(UserConfiguration.Current.Repositories, id)))
+                using (var browser = new RepositoryBrowser(Path.Combine(UserConfiguration.Current.Repositories, RepositoryRepository.GetRepository(id).DisplayName)))
                 {
                     string referenceName;
                     var model = browser.BrowseBlob(name, path, out referenceName);
@@ -231,7 +231,7 @@ namespace Bonobo.Git.Server.Controllers
             ViewBag.ID = id;
             if (!String.IsNullOrEmpty(id))
             {
-                using (var browser = new RepositoryBrowser(Path.Combine(UserConfiguration.Current.Repositories, id)))
+                using (var browser = new RepositoryBrowser(Path.Combine(UserConfiguration.Current.Repositories, RepositoryRepository.GetRepository(id).DisplayName)))
                 {
                     string referenceName;
                     var model = browser.BrowseBlob(name, path, out referenceName);
@@ -248,7 +248,7 @@ namespace Bonobo.Git.Server.Controllers
             ViewBag.ID = id;
             if (!String.IsNullOrEmpty(id))
             {
-                using (var browser = new RepositoryBrowser(Path.Combine(UserConfiguration.Current.Repositories, id)))
+                using (var browser = new RepositoryBrowser(Path.Combine(UserConfiguration.Current.Repositories, RepositoryRepository.GetRepository(id).DisplayName)))
                 {
                     string referenceName;
                     var commits = browser.GetCommits(name, out referenceName);
@@ -266,7 +266,7 @@ namespace Bonobo.Git.Server.Controllers
             ViewBag.ID = id;
             if (!String.IsNullOrEmpty(id))
             {
-                using (var browser = new RepositoryBrowser(Path.Combine(UserConfiguration.Current.Repositories, id)))
+                using (var browser = new RepositoryBrowser(Path.Combine(UserConfiguration.Current.Repositories, RepositoryRepository.GetRepository(id).DisplayName)))
                 {
                     var model = browser.GetCommitDetail(commit);
                     model.Name = id;
@@ -327,6 +327,7 @@ namespace Bonobo.Git.Server.Controllers
             return model == null ? null : new RepositoryDetailModel
             {
                 Name = model.Name,
+                DisplayName = model.DisplayName,
                 Description = model.Description,
                 Users = model.Users,
                 Administrators = model.Administrators,
@@ -340,7 +341,8 @@ namespace Bonobo.Git.Server.Controllers
         {
             return model == null ? null : new RepositoryModel
             {
-                Name = model.Name,
+                DisplayName = model.Name,
+                Name = model.Name.NormalizeRepoName(model.ForceNameNomalize),
                 Description = model.Description,
                 Users = model.Users,
                 Administrators = model.Administrators,

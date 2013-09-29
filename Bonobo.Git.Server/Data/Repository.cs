@@ -6,6 +6,7 @@ namespace Bonobo.Git.Server.Data
     public partial class Repository
     {
         public string Name { get; set; }
+        public string DisplayName { get; set; }
         public string Description { get; set; }
         public bool Anonymous { get; set; }
         public virtual ICollection<Team> Teams { get; set; }

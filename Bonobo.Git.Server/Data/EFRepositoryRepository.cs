@@ -5,7 +5,7 @@ using System.Web;
 using Bonobo.Git.Server.Models;
 using System.Data;
 using Bonobo.Git.Server.Data;
-
+using Bonobo.Git.Server.Extensions;
 namespace Bonobo.Git.Server.Data
 {
     public class EFRepositoryRepository : IRepositoryRepository
@@ -37,7 +37,7 @@ namespace Bonobo.Git.Server.Data
         public IList<RepositoryModel> GetAdministratedRepositories(string username)
         {
             if (username == null) throw new ArgumentException("username");
-            
+
             username = username.ToLowerInvariant();
             return GetAllRepositories().Where(i => i.Administrators.Contains(username)).ToList();
         }
@@ -80,6 +80,7 @@ namespace Bonobo.Git.Server.Data
                 var repository = new Repository
                 {
                     Name = model.Name,
+                    DisplayName = model.DisplayName,
                     Description = model.Description,
                     Anonymous = model.AnonymousAccess,
                 };
@@ -129,6 +130,7 @@ namespace Bonobo.Git.Server.Data
                 return new RepositoryModel
                         {
                             Name = item.Name,
+                            DisplayName=item.DisplayName,
                             Description = item.Description,
                             AnonymousAccess = item.Anonymous,
                             Users = item.Users.Select(i => i.Username).ToArray(),
